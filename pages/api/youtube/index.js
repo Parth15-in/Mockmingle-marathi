@@ -52,12 +52,12 @@ export default async function handler(req, res) {
               recommendations: [{
                 skill: "AAO (Automotive Assembly Operator) Process & Safety",
                 videos: [
-                  { title: "How Cars Are Made - BMW Factory Tour", url: "https://www.youtube.com/watch?v=g3AiR-MC-7k" },
-                  { title: "Automotive Assembly Line - Manufacturing Process", url: "https://www.youtube.com/watch?v=aiIU3Z1T6Vg" },
-                  { title: "Car Factory Production Line - Assembly Process", url: "https://www.youtube.com/watch?v=YlYTvjUR1jg" },
-                  { title: "Industrial Safety Training - Complete Guide", url: "https://www.youtube.com/watch?v=m_N2UwKRwGw" },
-                  { title: "Manufacturing Safety Rules and Procedures", url: "https://www.youtube.com/watch?v=dGnchGqaLjY" },
-                  { title: "ऑटोमोबाईल उद्योग - मराठी माहिती", url: "https://www.youtube.com/watch?v=RkL8a_lXYzU" }
+                  { title: "How It's Made - Car Assembly", url: "https://www.youtube.com/watch?v=iMtXqTmfta0" },
+                  { title: "Tesla Factory Tour with Elon Musk", url: "https://www.youtube.com/watch?v=Mr9e5M6LbXY" },
+                  { title: "How BMW Cars Are Made - Production Line", url: "https://www.youtube.com/watch?v=Z1c2EFkm6L8" },
+                  { title: "Workplace Safety Training Video", url: "https://www.youtube.com/watch?v=3IHOc5ahg9k" },
+                  { title: "Manufacturing Process - Assembly Line", url: "https://www.youtube.com/watch?v=8_lfxPI5ObM" },
+                  { title: "कार कशी बनवली जाते - मराठी", url: "https://www.youtube.com/watch?v=nLxWnWdKfZY" }
                 ]
               }]
             }]
@@ -118,9 +118,9 @@ export default async function handler(req, res) {
               {
                 skill: "Industrial Operations (AAO & Safety)",
                 videos: [
-                  { title: "How Cars Are Made - BMW Factory Tour", url: "https://www.youtube.com/watch?v=g3AiR-MC-7k" },
-                  { title: "Car Factory Production Line - Assembly Process", url: "https://www.youtube.com/watch?v=YlYTvjUR1jg" },
-                  { title: "Industrial Safety Training - Complete Guide", url: "https://www.youtube.com/watch?v=m_N2UwKRwGw" }
+                  { title: "How It's Made - Car Assembly", url: "https://www.youtube.com/watch?v=iMtXqTmfta0" },
+                  { title: "Tesla Factory Tour with Elon Musk", url: "https://www.youtube.com/watch?v=Mr9e5M6LbXY" },
+                  { title: "Manufacturing Process - Assembly Line", url: "https://www.youtube.com/watch?v=8_lfxPI5ObM" }
                 ]
               }
             ]

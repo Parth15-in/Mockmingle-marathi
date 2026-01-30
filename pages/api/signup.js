@@ -20,7 +20,7 @@ const handler = async (req, res) => {
         //     console.log('Connecting to MongoDB...');
         //     await mongoose.connect(process.env.MONGODB_URI);
         // }
-         await dbConnect();
+        //  await dbConnect();
         
         if (req.method == 'POST') {
             // Extract all fields from request body
@@ -202,4 +202,5 @@ const handler = async (req, res) => {
     }
 }
 
-export default handler;
+export default dbConnect(handler);
+

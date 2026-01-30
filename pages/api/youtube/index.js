@@ -32,11 +32,12 @@ export default async function handler(req, res) {
               recommendations: [{
                 skill: "PCB (Printed Circuit Board) Design & Assembly",
                 videos: [
-                  { title: "Electronic Component Soldering Basics", url: "https://www.youtube.com/watch?v=f95i88OSWB4" },
-                  { title: "How a PCB is Manufactured", url: "https://www.youtube.com/watch?v=yvTid2j7oY4" },
-                  { title: "Basics of PCB Design for Beginners", url: "https://www.youtube.com/watch?v=3Sia7A_f_H8" },
-                  { title: "Surface Mount Technology (SMT) Overview", url: "https://www.youtube.com/watch?v=3C9_6A_v4fU" },
-                  { title: "Hand Soldering Techniques for PCBs", url: "https://www.youtube.com/watch?v=vIT4ra6Mo0s" }
+                  { title: "PCB Manufacturing Process - Complete Guide", url: "https://www.youtube.com/watch?v=ljOoGyCso8s" },
+                  { title: "How to Solder - Beginner's Guide", url: "https://www.youtube.com/watch?v=Qps9woUGkvI" },
+                  { title: "PCB Design Tutorial for Beginners", url: "https://www.youtube.com/watch?v=35YuILUlfGs" },
+                  { title: "Surface Mount Soldering Techniques", url: "https://www.youtube.com/watch?v=5uiroWBkdFY" },
+                  { title: "PCB बनवण्याची प्रक्रिया - मराठी (Marathi)", url: "https://www.youtube.com/watch?v=VxMV6wGS3NY" },
+                  { title: "इलेक्ट्रॉनिक्स मूलभूत गोष्टी - मराठी", url: "https://www.youtube.com/watch?v=6Maq5IyHSuc" }
                 ]
               }]
             }]
@@ -51,11 +52,12 @@ export default async function handler(req, res) {
               recommendations: [{
                 skill: "AAO (Automotive Assembly Operator) Process & Safety",
                 videos: [
-                  { title: "Modern Car Assembly Line Tour", url: "https://www.youtube.com/watch?v=2n6_9O-K1S8" },
-                  { title: "How a Car is Made: Factory Tour", url: "https://www.youtube.com/watch?v=8_lS-9257-U" },
-                  { title: "Workplace Safety in Automotive Plants", url: "https://www.youtube.com/watch?v=Xh0mC_y9m_o" },
-                  { title: "Assembly Line Skills & Techniques", url: "https://www.youtube.com/watch?v=pAnR9_wW3fI" },
-                  { title: "Industrial Safety Training Overview", url: "https://www.youtube.com/watch?v=m2G-rJp8k5A" }
+                  { title: "Car Manufacturing Process - Assembly Line", url: "https://www.youtube.com/watch?v=WdFYqJcAGJA" },
+                  { title: "Automotive Assembly Line - Complete Process", url: "https://www.youtube.com/watch?v=2FlFGqwGJas" },
+                  { title: "Industrial Safety Training - Workplace Safety", url: "https://www.youtube.com/watch?v=Oo8zASZTJEg" },
+                  { title: "Manufacturing Skills & Techniques", url: "https://www.youtube.com/watch?v=h2rR77VsF5c" },
+                  { title: "ऑटोमोटिव्ह उद्योग प्रशिक्षण - मराठी", url: "https://www.youtube.com/watch?v=kPxRdFXgYSg" },
+                  { title: "कारखान्यातील सुरक्षा नियम - मराठी", url: "https://www.youtube.com/watch?v=IiUQkJJZgVs" }
                 ]
               }]
             }]
@@ -70,8 +72,11 @@ export default async function handler(req, res) {
               recommendations: [{
                 skill: "English Communication",
                 videos: [
-                  { title: "English Conversation Practice", url: "https://www.youtube.com/watch?v=kY6T-K1X4oM" },
-                  { title: "Professional English for Interviews", url: "https://www.youtube.com/watch?v=X0V7mZ17hK0" }
+                  { title: "English Speaking Practice - Daily Conversation", url: "https://www.youtube.com/watch?v=AMLv7fIeHJM" },
+                  { title: "Job Interview English - Common Questions", url: "https://www.youtube.com/watch?v=naIkpQ_cIt0" },
+                  { title: "English Communication Skills", url: "https://www.youtube.com/watch?v=cXx4bMTwfBQ" },
+                  { title: "इंग्रजी बोलणे शिका - मराठी मध्ये", url: "https://www.youtube.com/watch?v=8irSFvoyQHw" },
+                  { title: "मुलाखतीसाठी इंग्रजी - मराठी", url: "https://www.youtube.com/watch?v=5ZRYGsVD3Ks" }
                 ]
               }]
             }]
@@ -86,8 +91,11 @@ export default async function handler(req, res) {
               recommendations: [{
                 skill: "Mathematics Foundations",
                 videos: [
-                  { title: "Basic Maths Concepts in Marathi", url: "https://www.youtube.com/watch?v=3Sia7A_f_H8" },
-                  { title: "Ganit Maithili Skills", url: "https://www.youtube.com/watch?v=0kFp6c9m-xU" }
+                  { title: "Basic Mathematics - Complete Course", url: "https://www.youtube.com/watch?v=LwCRRUa8yTU" },
+                  { title: "Mathematics for Competitive Exams", url: "https://www.youtube.com/watch?v=ilClXMJczVk" },
+                  { title: "गणित मूलभूत संकल्पना - मराठी", url: "https://www.youtube.com/watch?v=YQHsXMglC9A" },
+                  { title: "गणित ट्रिक्स मराठी मध्ये", url: "https://www.youtube.com/watch?v=rKKur5C0ZHg" },
+                  { title: "गणित सोपे तंत्र - मराठी", url: "https://www.youtube.com/watch?v=8kX62n6yNXA" }
                 ]
               }]
             }]
@@ -102,15 +110,17 @@ export default async function handler(req, res) {
               {
                 skill: "Core Technical Skills (PCB & Assembly)",
                 videos: [
-                  { title: "How PCBs are Made - Step by Step", url: "https://www.youtube.com/watch?v=T_7bY7F0lXo" },
-                  { title: "Electronic Component Soldering Basics", url: "https://www.youtube.com/watch?v=f95i88OSWB4" }
+                  { title: "PCB Manufacturing Process - Complete Guide", url: "https://www.youtube.com/watch?v=ljOoGyCso8s" },
+                  { title: "How to Solder - Beginner's Guide", url: "https://www.youtube.com/watch?v=Qps9woUGkvI" },
+                  { title: "PCB बनवण्याची प्रक्रिया - मराठी", url: "https://www.youtube.com/watch?v=VxMV6wGS3NY" }
                 ]
               },
               {
                 skill: "Industrial Operations (AAO & Safety)",
                 videos: [
-                  { title: "Modern Car Assembly Line Tour", url: "https://www.youtube.com/watch?v=2n6_9O-K1S8" },
-                  { title: "Automotive Manufacturing Overview", url: "https://www.youtube.com/watch?v=pAnR9_wW3fI" }
+                  { title: "Car Manufacturing Process - Assembly Line", url: "https://www.youtube.com/watch?v=WdFYqJcAGJA" },
+                  { title: "Industrial Safety Training", url: "https://www.youtube.com/watch?v=Oo8zASZTJEg" },
+                  { title: "ऑटोमोटिव्ह उद्योग प्रशिक्षण - मराठी", url: "https://www.youtube.com/watch?v=kPxRdFXgYSg" }
                 ]
               }
             ]

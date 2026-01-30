@@ -3,8 +3,6 @@
  * Questions are generated in Marathi based on the provided academic parameters
  */
 
-
-
 export const config = {
   runtime: 'nodejs',
   maxDuration: 300,
@@ -34,75 +32,79 @@ export default async function handler(req, res) {
     }
   } catch (error) {
     console.error('Error during processing:', error);
-    return res.status(500).json({ 
+    return res.status(500).json({
       error: 'Error during question generation.',
-      details: error.message 
+      details: error.message
     });
   }
 }
 
 async function generateQuestionsWithOpenAI(level, role, board, subject) {
   const openaiUrl = 'https://api.openai.com/v1/chat/completions';
-  
+
   const headers = {
     'Content-Type': 'application/json',
     'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`
   };
 
   const systemPrompt = `
-You are a professional technical interviewer for entry-level industrial jobs.
-You strictly generate role-specific interview questions in Marathi.
-You NEVER generate school, mathematics, or academic syllabus questions.
+You are a senior technical interviewer and industrial specialist for entry-level engineering and manufacturing jobs.
+Your goal is to generate high-depth, practical, and non-repetitive interview questions.
+You strictly generate role-specific interview questions using a mix of formal Marathi and English technical terms in Roman script.
+You MUST keep all technical, theoretical, and management-related terms (e.g., "SOP", "SMT", "Quality Check", "Circuit", "Gerber", "Torque", "Reflow", "DRC") in English script (A-Z) exactly as they are.
+Do NOT transliterate these terms into Marathi script.
+Translate only the general language into proper, formal, and grammatically correct Marathi.
+You NEVER generate school, mathematics, or general academic syllabus questions.
+Questions must feel like they are being asked in a real factory or design house interview.
 `;
 
-const userPrompt = `
-Generate 10 job-role-specific interview questions in Marathi based on the details below.
+  const userPrompt = `
+Generate 10 UNIQUE and high-depth job-role-specific interview questions in Marathi based on the details below.
 
 Role: ${role}
 Subject: ${subject}
 Difficulty Level: ${level}
 
-STRICT RULES (VERY IMPORTANT):
-- This is NOT a school or college exam.
-- Do NOT generate mathematics, science, or textbook questions.
-- Questions must be suitable for job interviews only.
+STRICT VARIETY RULES:
+- Each of the 10 questions MUST cover a different sub-topic or technical area within the role.
+- Avoid repeating the same theme (e.g., don't ask 3 questions about soldering).
+- Questions should range from basic definitions to practical troubleshooting (e.g., "What will you do if...").
 
-ROLE-SPECIFIC INSTRUCTIONS:
+ROLE-SPECIFIC TECHNICAL CONTEXT:
 
-If Role is PCB (Printed Circuit Board):
-- Ask ONLY about:
-  - PCB basics
-  - Electronic components
-  - Soldering, SMT, through-hole technology
-  - PCB manufacturing, inspection, and safety
-  - Basic electronics used in industry
+If Role/Subject relates to PCB (Printed Circuit Board):
+- Focus on specialized sub-topics:
+  - Design & Data: Gerber files, DRC (Design Rule Check), Schematics vs. Layout.
+  - Fabrication: Multilayer stack-up, Etching process, Prepreg, Soldermask.
+  - Assembly (SMT & Through-hole): Pick-and-place machine, Reflow vs Wave soldering, Soldering defects (Bridging, Cold joints).
+  - Testing & Quality: AOI (Automated Optical Inspection), X-Ray, Flying probe test, ICT.
+  - Components: Passive vs Active components, Package types (BGA, QFP, 0603).
 
-If Role is AAO (Automotive Assembly Operator):
-- Ask ONLY about:
-  - Assembly line work
-  - Automotive parts and tools
-  - Safety procedures and PPE
-  - Quality checks
-  - Teamwork, discipline, and SOPs
+If Role/Subject relates to AAO (Automotive Assembly Operator):
+- Focus on specialized sub-topics:
+  - Assembly Process: Torque management, SOP (Standard Operating Procedure), Assembly sequence.
+  - Tools & Equipment: Pneumatic tools, Jigs and Fixtures, Conveyor belt operations.
+  - Quality Control: Poka-yoke (Error-proofing), Visual inspection, Reject handling.
+  - Safety & Environment: PPE, LOTO (Lock-Out Tag-Out), 5S Principles, Forklift safety.
+  - Teamwork & Production: FIFO (First-In, First-Out), Cycle time, Production targets.
 
 FORMATTING RULES:
-- Write ALL questions in Marathi only.
+- Use formal Marathi for the general instructions.
+- KEEP ALL technical terms in English (Roman script).
 - Use Marathi numerals (१, २, ३, …).
-- Each question must have 2–3 full sentences.
-- Use interview-style wording like:
-  “समजावून सांगा”, “कसे कराल”, “तुमचा अनुभव सांगा”, “काय काळजी घ्याल”.
-- Do NOT include answers, hints, headings, markdown, or extra text.
-- Output ONLY a clean numbered list of questions.
+- Each question must be 2-3 detailed sentences.
+- Use variety in wording: “विस्ताराने सांगा”, “प्रात्यक्षिक स्वरूपात स्पष्ट करा”, “काय बदल कराल”, “तुमची भूमिका काय असेल”.
+- Output ONLY a clean numbered list of questions. No extra text.
 `;
 
   const requestBody = {
-    model: 'gpt-4',
+    model: 'gpt-4o-mini',
     messages: [
       { role: 'system', content: systemPrompt },
       { role: 'user', content: userPrompt }
     ],
-    temperature: 0.7,
-    max_tokens: 1000
+    temperature: 0.4, // Lower temperature for more focused and technical output
+    max_tokens: 1500
   };
 
   try {

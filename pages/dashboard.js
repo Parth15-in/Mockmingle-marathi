@@ -16,20 +16,20 @@ export default function dashboard({ Logout, user }) {
 
 
   useEffect(() => {
-          if (!localStorage.getItem("token")) {
-            router.push("/login");
-          } else {
-            const userFromStorage = JSON.parse(localStorage.getItem('user'));
-          
-            
-          }
-        }, []);
+    if (!localStorage.getItem("token")) {
+      router.push("/login");
+    } else {
+      const userFromStorage = JSON.parse(localStorage.getItem('user'));
 
- 
 
- 
+    }
+  }, []);
 
- 
+
+
+
+
+
   const toggleDropdown = () => setDropdown(prev => !prev);
   const toggleMobileMenu = () => setMobileMenuOpen(prev => !prev);
 
@@ -57,11 +57,11 @@ export default function dashboard({ Logout, user }) {
             <img src="/Logo.png" alt="Logo" className="w-8 h-8 object-contain" />
             <div className="text-white text-xl font-bold">Shakkti<span className="text-pink-500">AI</span></div>
           </div>
-          
+
           {/* Desktop Navigation */}
           <ul className="hidden md:flex space-x-8 text-sm items-center">
             <li className="hover:text-pink-400 cursor-pointer transition-colors font-medium">होम</li>
-            
+
             <Link href={'/progress'}>
               <li className="hover:text-pink-400 cursor-pointer transition-colors font-medium">
                 <span className="relative inline-flex">
@@ -69,9 +69,9 @@ export default function dashboard({ Logout, user }) {
                 </span>
               </li>
             </Link>
-            
-            
-            
+
+
+
             <Link href={'/oldreport'}>
               <li className="relative hover:text-pink-400 cursor-pointer transition-colors font-medium" onClick={handleReportClick}>
                 रिपोर्ट्स
@@ -81,7 +81,7 @@ export default function dashboard({ Logout, user }) {
               </li>
             </Link>
           </ul>
-          
+
           {/* Desktop User Section */}
           <div className="hidden md:flex items-center gap-4">
             {user?.value ? (
@@ -92,7 +92,7 @@ export default function dashboard({ Logout, user }) {
                     {firstName || 'खाते'}
                   </span>
                 </div>
-                
+
                 {dropdown && (
                   <div className="absolute right-0 shadow-xl top-12 rounded-lg w-48 border border-gray-200 bg-white text-black overflow-hidden z-50">
                     <ul>
@@ -101,7 +101,7 @@ export default function dashboard({ Logout, user }) {
                           <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                             <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
                           </svg>
-                         प्रोफाइल
+                          प्रोफाइल
                         </li>
                       </Link>
                       <Link href={'/progress'}>
@@ -112,7 +112,7 @@ export default function dashboard({ Logout, user }) {
                           माझा प्रगती रिपोर्ट
                         </li>
                       </Link>
-                  
+
                       <li onClick={Logout} className="hover:text-red-700 text-sm font-medium p-3 cursor-pointer hover:bg-gray-50 transition-colors flex items-center gap-2">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                           <path fillRule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 001 1h12a1 1 0 001-1V7.414l-5-5H3zm7 5a1 1 0 00-1 1v5.586l-1.293-1.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 15.586V9a1 1 0 00-1-1z" clipRule="evenodd" />
@@ -131,10 +131,10 @@ export default function dashboard({ Logout, user }) {
               </Link>
             )}
           </div>
-          
+
           {/* Mobile Menu Button - Single hamburger icon for mobile */}
-          <button 
-            className="md:hidden text-white focus:outline-none z-20" 
+          <button
+            className="md:hidden text-white focus:outline-none z-20"
             onClick={toggleMobileMenu}
           >
             {mobileMenuOpen ? (
@@ -147,13 +147,13 @@ export default function dashboard({ Logout, user }) {
               </svg>
             )}
           </button>
-          
+
           {/* Mobile Navigation - Combining all navigation elements for mobile */}
           {mobileMenuOpen && (
             <div className="md:hidden fixed inset-0 bg-black bg-opacity-80 z-10 flex flex-col items-center justify-center">
               <ul className="flex flex-col space-y-6 text-center items-center">
                 <li className="text-white hover:text-pink-400 font-medium text-xl cursor-pointer" onClick={toggleMobileMenu}>होम</li>
-                
+
                 <Link href={'/progress'}>
                   <li className="text-white hover:text-pink-400 font-medium text-xl cursor-pointer" onClick={toggleMobileMenu}>
                     <span className="relative inline-flex">
@@ -162,7 +162,7 @@ export default function dashboard({ Logout, user }) {
                     </span>
                   </li>
                 </Link>
-                
+
                 <Link href={'/oldreport'}>
                   <li className="text-white hover:text-pink-400 font-medium text-xl cursor-pointer relative" onClick={() => { handleReportClick(); toggleMobileMenu(); }}>
                     रिपोर्ट्स
@@ -171,7 +171,7 @@ export default function dashboard({ Logout, user }) {
                     )}
                   </li>
                 </Link>
-                
+
                 {user?.value ? (
                   <>
                     <Link href={'/profile'}>
@@ -201,7 +201,7 @@ export default function dashboard({ Logout, user }) {
             <img src="/Logo.png" alt="Logo" className="w-16 h-16 object-contain" />
           </div>
 
-          
+
 
           {/* Hero Section */}
           <div className="relative mb-10 flex flex-col md:flex-row items-center justify-center text-white max-w-7xl mx-auto">
@@ -210,17 +210,17 @@ export default function dashboard({ Logout, user }) {
                 <span className="inline-block bg-gradient-to-r from-pink-500 to-purple-600 text-white px-4 py-1 rounded-full text-sm font-medium mb-2 w-fit animate-pulse">
                   नवीन: प्रगतीचे निरीक्षण आणि विश्लेषण
                 </span>
-                
+
                 <h1 className="text-4xl md:text-6xl font-bold leading-tight">
-                  तुमचे <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-600"> मुलाखत कौशल्ये </span>पारंगत करा 
+                  तुमचे <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-600"> मुलाखत कौशल्ये </span>पारंगत करा
                   <br />
                   AI-चालित अभिप्रायासह
                 </h1>
-                
+
                 <p className="text-gray-300 text-lg mt-2">
                   आमच्या AI मुलाखतकारासोबत सराव करा, त्वरित अभिप्राय मिळवा, आणि सखोल विश्लेषणासह तुमची प्रगती वेळोवेळी ट्रॅक करा.
                 </p>
-                
+
                 <div className="mt-6 flex flex-col sm:flex-row gap-4">
                   <Link href={'/role'}>
                     <button className="bg-gradient-to-r from-pink-500 to-purple-600 text-white py-3 px-8 rounded-full text-lg font-semibold hover:from-pink-600 hover:to-purple-700 transition duration-300 shadow-lg hover:shadow-xl flex items-center gap-2 group">
@@ -230,7 +230,7 @@ export default function dashboard({ Logout, user }) {
                       </svg>
                     </button>
                   </Link>
-                  
+
                   <Link href={'/progress'}>
                     <button className="border-2 border-white hover:border-pink-400 text-white py-3 px-8 rounded-full text-lg font-semibold hover:text-pink-400 transition duration-300 flex items-center gap-2 group">
                       प्रगती पहा
@@ -239,7 +239,7 @@ export default function dashboard({ Logout, user }) {
                       </svg>
                     </button>
                   </Link>
-                  
+
                   <Link href={'/practices'}>
                     <button className="bg-gradient-to-r from-indigo-500 to-blue-600 text-white py-3 px-8 rounded-full text-lg font-semibold hover:from-indigo-600 hover:to-blue-700 transition duration-300 shadow-lg hover:shadow-xl flex items-center gap-2 group">
                       सराव चाचण्या
@@ -249,26 +249,26 @@ export default function dashboard({ Logout, user }) {
                       </svg>
                     </button>
                   </Link>
-                  
-                 
-                 
+
+
+
 
 
                 </div>
               </div>
             </div>
-            
+
             <div className="order-1 md:order-2 mb-8 md:mb-0">
               <div className="relative">
-                <img 
-                  src="/mock.png" 
-                  alt="AI Interview Assistant" 
-                  className="relative w-full max-w-md md:max-w-xl rounded-lg" 
+                <img
+                  src="/mock.png"
+                  alt="AI Interview Assistant"
+                  className="relative w-full max-w-md md:max-w-xl rounded-lg"
                 />
               </div>
             </div>
           </div>
-          
+
 
 
         </div>
@@ -279,7 +279,7 @@ export default function dashboard({ Logout, user }) {
           <h1 className="text-4xl font-bold text-center mb-12">
             तुम्ही मुलाखतीसाठी तयार आहात का?<span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-600">Shakkti AI </span>द्वारे चाचणी द्या.
           </h1>
-          
+
           {/* Feature Sections */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-24">
             {/* Progress Tracking Feature */}
@@ -337,197 +337,197 @@ export default function dashboard({ Logout, user }) {
                 </Link>
               </div>
             </div>
-            
-            
+
+
           </div>
 
 
-        <div className="relative mt-10 lg:m-40 grid grid-cols-1 lg:grid-cols-2 " style={{ perspective: "1000px" }}>
-          <div
-            className="transform rounded-lg gap-10"
-            style={{
-              transform: "rotateY(50deg)",
-              transformStyle: "preserve-3d",
-            }}
-          >
-            <img
-              src="/p1.jpeg"
-              width={300}
+          <div className="relative mt-10 lg:m-40 grid grid-cols-1 lg:grid-cols-2 " style={{ perspective: "1000px" }}>
+            <div
+              className="transform rounded-lg gap-10"
+              style={{
+                transform: "rotateY(50deg)",
+                transformStyle: "preserve-3d",
+              }}
+            >
+              <img
+                src="/p1.jpeg"
+                width={300}
 
-              alt="Preparation is the key"
-              className="rounded-lg h-40 shadow-2xl shadow-gray-300"
-            />
-          </div>
-
-          <div className="mt-4">
-            <div className="flex items-center gap-2">
-              <span className="bg-purple-500 text-white px-3 py-1 rounded-full text-sm">1</span>
-              <h2 className="text-xl font-semibold text-purple-700">प्रॅक्टिस करा</h2>
+                alt="Preparation is the key"
+                className="rounded-lg h-40 shadow-2xl shadow-gray-300"
+              />
             </div>
-            <p className="text-gray-600 mt-2 text-sm leading-relaxed">
-              तुमच्या मुलाखतीच्या कौशल्यांचा अभ्यास करा, सुधारणा आवश्यक असलेले भाग ओळखा आणि उत्तरे अधिक प्रभावी बनवा. वास्तविक मुलाखतीपूर्वी आत्मविश्वास वाढवा आणि तणाव कमी करा, जेणेकरून तुम्ही यशस्वी होऊ शकता.
-            </p>
-          </div>
-        </div>
 
-
-        <div
-          className="relative lg:m-40 mt-10 grid grid-cols-1 lg:grid-cols-2"
-          style={{ perspective: "1000px" }}
-        >
-          {/* Image Section */}
-          <div
-            className="transform rounded-lg mr-10  sm:order-first lg:order-last"
-            style={{
-              transform: "rotateY(330deg)",
-              transformStyle: "preserve-3d",
-            }}
-          >
-            <img
-              src="/p2.jpeg"
-              width={300}
-              alt="Preparation is the key"
-              className="rounded-lg h-40 lg:ml-32 shadow-2xl order-1 shadow-gray-300"
-            />
-          </div>
-
-          {/* Text Section */}
-          <div className="mt-4">
-            <div className="flex items-center gap-2">
-              <span className="bg-purple-500 text-white px-3 py-1 rounded-full text-sm">2</span>
-              <h2 className="text-xl font-semibold text-purple-700">AI आधारित थेट मुलाखत सराव सत्र</h2>
+            <div className="mt-4">
+              <div className="flex items-center gap-2">
+                <span className="bg-purple-500 text-white px-3 py-1 rounded-full text-sm">1</span>
+                <h2 className="text-xl font-semibold text-purple-700">प्रॅक्टिस करा</h2>
+              </div>
+              <p className="text-gray-600 mt-2 text-sm leading-relaxed">
+                तुमच्या मुलाखतीच्या कौशल्यांचा अभ्यास करा, सुधारणा आवश्यक असलेले भाग ओळखा आणि उत्तरे अधिक प्रभावी बनवा. वास्तविक मुलाखतीपूर्वी आत्मविश्वास वाढवा आणि तणाव कमी करा, जेणेकरून तुम्ही यशस्वी होऊ शकता.
+              </p>
             </div>
-            <p className="text-gray-600 mt-2 text-sm leading-relaxed">
-              AI-सह थेट मॉक इंटरव्ह्यूचा अनुभव घ्या – जिथे तुमच्या बोलण्याची शैली, आत्मविश्वास आणि अचूकतेवर त्वरित प्रतिक्रिया मिळते. डेटा-आधारित विश्लेषणामुळे वेळ वाचतो आणि सुधारण्याच्या दिशा स्पष्ट होतात.
-            </p>
           </div>
-        </div>
 
 
-
-
-        <div className="relative mt-10 lg:m-40 grid grid-cols-1 lg:grid-cols-2 " style={{ perspective: "1000px" }}>
           <div
-            className="transform rounded-lg"
-            style={{
-              transform: "rotateY(50deg)",
-              transformStyle: "preserve-3d",
-            }}
+            className="relative lg:m-40 mt-10 grid grid-cols-1 lg:grid-cols-2"
+            style={{ perspective: "1000px" }}
           >
-            <img
-              src="/p3.jpg"
-              width={300}
-
-              alt="Preparation is the key"
-              className="rounded-lg h-40 shadow-2xl shadow-gray-700"
-            />
-          </div>
-
-          <div className="mt-4">
-            <div className="flex items-center gap-2">
-              <span className="bg-purple-500 text-white px-3 py-1 rounded-full text-sm">3</span>
-              <h2 className="text-xl font-semibold text-purple-700">तुमच्या सोयीनुसार मुलाखतीचे वेळापत्रक</h2>
+            {/* Image Section */}
+            <div
+              className="transform rounded-lg mr-10  sm:order-first lg:order-last"
+              style={{
+                transform: "rotateY(330deg)",
+                transformStyle: "preserve-3d",
+              }}
+            >
+              <img
+                src="/p2.jpeg"
+                width={300}
+                alt="Preparation is the key"
+                className="rounded-lg h-40 lg:ml-32 shadow-2xl order-1 shadow-gray-300"
+              />
             </div>
-            <p className="text-gray-600 mt-2 text-sm leading-relaxed">
-              कधीही आणि कुठेही सराव करा – निश्चित वेळापत्रकाची गरज नाही. विद्यार्थ्यांना आणि व्यावसायिकांना तत्काळ प्रवेश मिळावा यासाठी फ्लेक्सिबल आणि स्ट्रेस-फ्री तयारीची सुविधा.
-            </p>
+
+            {/* Text Section */}
+            <div className="mt-4">
+              <div className="flex items-center gap-2">
+                <span className="bg-purple-500 text-white px-3 py-1 rounded-full text-sm">2</span>
+                <h2 className="text-xl font-semibold text-purple-700">AI आधारित थेट मुलाखत सराव सत्र</h2>
+              </div>
+              <p className="text-gray-600 mt-2 text-sm leading-relaxed">
+                AI-सह थेट मॉक इंटरव्ह्यूचा अनुभव घ्या – जिथे तुमच्या बोलण्याची शैली, आत्मविश्वास आणि अचूकतेवर त्वरित प्रतिक्रिया मिळते. डेटा-आधारित विश्लेषणामुळे वेळ वाचतो आणि सुधारण्याच्या दिशा स्पष्ट होतात.
+              </p>
+            </div>
           </div>
-        </div>
 
 
-        <div
-          className="relative lg:m-40 mt-10 grid grid-cols-1 lg:grid-cols-2"
-          style={{ perspective: "1000px" }}
-        >
-          {/* Image Section */}
+
+
+          <div className="relative mt-10 lg:m-40 grid grid-cols-1 lg:grid-cols-2 " style={{ perspective: "1000px" }}>
+            <div
+              className="transform rounded-lg"
+              style={{
+                transform: "rotateY(50deg)",
+                transformStyle: "preserve-3d",
+              }}
+            >
+              <img
+                src="/p3.jpg"
+                width={300}
+
+                alt="Preparation is the key"
+                className="rounded-lg h-40 shadow-2xl shadow-gray-700"
+              />
+            </div>
+
+            <div className="mt-4">
+              <div className="flex items-center gap-2">
+                <span className="bg-purple-500 text-white px-3 py-1 rounded-full text-sm">3</span>
+                <h2 className="text-xl font-semibold text-purple-700">तुमच्या सोयीनुसार मुलाखतीचे वेळापत्रक</h2>
+              </div>
+              <p className="text-gray-600 mt-2 text-sm leading-relaxed">
+                कधीही आणि कुठेही सराव करा – निश्चित वेळापत्रकाची गरज नाही. विद्यार्थ्यांना आणि व्यावसायिकांना तत्काळ प्रवेश मिळावा यासाठी फ्लेक्सिबल आणि स्ट्रेस-फ्री तयारीची सुविधा.
+              </p>
+            </div>
+          </div>
+
+
           <div
-            className="transform rounded-lg lg:ml-32 mr-10 sm:order-first lg:order-last"
-            style={{
-              transform: "rotateY(330deg)",
-              transformStyle: "preserve-3d",
-            }}
+            className="relative lg:m-40 mt-10 grid grid-cols-1 lg:grid-cols-2"
+            style={{ perspective: "1000px" }}
           >
-            <img
-              src="/p4.png"
-              width={300}
-              alt="Preparation is the key"
-              className="rounded-lg h-40 shadow-2xl order-1 shadow-gray-800"
-            />
-          </div>
-
-          {/* Text Section */}
-          <div className="mt-4">
-            <div className="flex items-center gap-2">
-              <span className="bg-purple-500 text-white px-3 py-1 rounded-full text-sm">4</span>
-              <h2 className="text-xl font-semibold text-purple-700">शिक्षणात गेमसारखा अनुभव</h2>
+            {/* Image Section */}
+            <div
+              className="transform rounded-lg lg:ml-32 mr-10 sm:order-first lg:order-last"
+              style={{
+                transform: "rotateY(330deg)",
+                transformStyle: "preserve-3d",
+              }}
+            >
+              <img
+                src="/p4.png"
+                width={300}
+                alt="Preparation is the key"
+                className="rounded-lg h-40 shadow-2xl order-1 shadow-gray-800"
+              />
             </div>
-            <p className="text-gray-600 mt-2 text-sm leading-relaxed">
-              MockMingle मध्ये स्कोर्स, बॅजेस आणि लीडरबोर्ड्ससह गैमीकरण वापरून शिकणे मजेदार, प्रेरणादायक आणि फलदायी बनवले आहे, तसेच तुमच्या प्रगतीवर लक्ष ठेवले जाते.
-            </p>
-          </div>
-        </div>
 
-        <div className="relative mt-10 lg:m-40 grid grid-cols-1 lg:grid-cols-2 " style={{ perspective: "1000px" }}>
+            {/* Text Section */}
+            <div className="mt-4">
+              <div className="flex items-center gap-2">
+                <span className="bg-purple-500 text-white px-3 py-1 rounded-full text-sm">4</span>
+                <h2 className="text-xl font-semibold text-purple-700">शिक्षणात गेमसारखा अनुभव</h2>
+              </div>
+              <p className="text-gray-600 mt-2 text-sm leading-relaxed">
+                MockMingle मध्ये स्कोर्स, बॅजेस आणि लीडरबोर्ड्ससह गैमीकरण वापरून शिकणे मजेदार, प्रेरणादायक आणि फलदायी बनवले आहे, तसेच तुमच्या प्रगतीवर लक्ष ठेवले जाते.
+              </p>
+            </div>
+          </div>
+
+          <div className="relative mt-10 lg:m-40 grid grid-cols-1 lg:grid-cols-2 " style={{ perspective: "1000px" }}>
+            <div
+              className="transform rounded-lg"
+              style={{
+                transform: "rotateY(50deg)",
+                transformStyle: "preserve-3d",
+              }}
+            >
+              <img
+                src="/p5.png"
+                width={300}
+
+                alt="Preparation is the key"
+                className="rounded-lg h-40 shadow-2xl shadow-gray-700"
+              />
+            </div>
+
+            <div className="mt-4">
+              <div className="flex items-center gap-2">
+                <span className="bg-purple-500 text-white px-3 py-1 rounded-full text-sm">5</span>
+                <h2 className="text-xl font-semibold text-purple-700"> तज्ज्ञांकडून फीडबॅक मिळवा</h2>
+              </div>
+              <p className="text-gray-600 mt-2 text-sm leading-relaxed">
+                AI आणि इंडस्ट्री तज्ज्ञांकडून संवाद, तांत्रिक कौशल्ये आणि कामगिरी यावर सखोल फीडबॅक मिळवा, तसेच तुमच्या मुलाखतीतील यशासाठी वैयक्तिक सुधारणा सूचना प्राप्त करा.
+              </p>
+            </div>
+          </div>
+
+
           <div
-            className="transform rounded-lg"
-            style={{
-              transform: "rotateY(50deg)",
-              transformStyle: "preserve-3d",
-            }}
+            className="relative lg:m-40 mt-10 grid grid-cols-1 lg:grid-cols-2"
+            style={{ perspective: "1000px" }}
           >
-            <img
-              src="/p5.png"
-              width={300}
-
-              alt="Preparation is the key"
-              className="rounded-lg h-40 shadow-2xl shadow-gray-700"
-            />
-          </div>
-
-          <div className="mt-4">
-            <div className="flex items-center gap-2">
-              <span className="bg-purple-500 text-white px-3 py-1 rounded-full text-sm">5</span>
-              <h2 className="text-xl font-semibold text-purple-700"> तज्ज्ञांकडून फीडबॅक मिळवा</h2>
+            {/* Image Section */}
+            <div
+              className="transform rounded-lg mr-10 lg:ml-32 sm:order-first lg:order-last"
+              style={{
+                transform: "rotateY(330deg)",
+                transformStyle: "preserve-3d",
+              }}
+            >
+              <img
+                src="/p6.jpg"
+                width={300}
+                alt="Preparation is the key"
+                className="rounded-lg h-40 shadow-2xl order-1 shadow-gray-800"
+              />
             </div>
-            <p className="text-gray-600 mt-2 text-sm leading-relaxed">
-              AI आणि इंडस्ट्री तज्ज्ञांकडून संवाद, तांत्रिक कौशल्ये आणि कामगिरी यावर सखोल फीडबॅक मिळवा, तसेच तुमच्या मुलाखतीतील यशासाठी वैयक्तिक सुधारणा सूचना प्राप्त करा.
-            </p>
-          </div>
-        </div>
 
-
-        <div
-          className="relative lg:m-40 mt-10 grid grid-cols-1 lg:grid-cols-2"
-          style={{ perspective: "1000px" }}
-        >
-          {/* Image Section */}
-          <div
-            className="transform rounded-lg mr-10 lg:ml-32 sm:order-first lg:order-last"
-            style={{
-              transform: "rotateY(330deg)",
-              transformStyle: "preserve-3d",
-            }}
-          >
-            <img
-              src="/p6.jpg"
-              width={300}
-              alt="Preparation is the key"
-              className="rounded-lg h-40 shadow-2xl order-1 shadow-gray-800"
-            />
-          </div>
-
-          {/* Text Section */}
-          <div className="mt-4">
-            <div className="flex items-center gap-2">
-              <span className="bg-purple-500 text-white px-3 py-1 rounded-full text-sm">6</span>
-              <h2 className="text-xl font-semibold text-purple-700">व्हिडिओ स्वरूपात मार्गदर्शन मिळवा
-              </h2>
+            {/* Text Section */}
+            <div className="mt-4">
+              <div className="flex items-center gap-2">
+                <span className="bg-purple-500 text-white px-3 py-1 rounded-full text-sm">6</span>
+                <h2 className="text-xl font-semibold text-purple-700">व्हिडिओ स्वरूपात मार्गदर्शन मिळवा
+                </h2>
+              </div>
+              <p className="text-gray-600 mt-2 text-sm leading-relaxed">
+                AI आणि तज्ज्ञांच्या मदतीने तुम्हाला व्हिडिओ स्वरूपात मार्गदर्शन मिळेल, ज्यात उत्तर देण्याच्या पद्धती, शारीरिक भाषा आणि आवाजावर सखोल सूचना दिल्या जातील. यामुळे तुम्हाला सुधारणा सहज आणि आकर्षकपणे करता येईल.
+              </p>
             </div>
-            <p className="text-gray-600 mt-2 text-sm leading-relaxed">
-              AI आणि तज्ज्ञांच्या मदतीने तुम्हाला व्हिडिओ स्वरूपात मार्गदर्शन मिळेल, ज्यात उत्तर देण्याच्या पद्धती, शारीरिक भाषा आणि आवाजावर सखोल सूचना दिल्या जातील. यामुळे तुम्हाला सुधारणा सहज आणि आकर्षकपणे करता येईल.
-            </p>
           </div>
-        </div>
 
 
         </div>

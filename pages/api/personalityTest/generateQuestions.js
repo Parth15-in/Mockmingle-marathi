@@ -16,17 +16,20 @@ export default async function handler(req, res) {
   try {
     // Always return exactly 10 questions
     const count = 10;
-    
+
     if (!process.env.OPENAI_API_KEY) {
       console.error('OpenAI API key is not configured');
-      return res.status(500).json({ 
+      return res.status(500).json({
         error: 'OpenAI API key is not configured. Please check your server configuration.'
       });
     }
 
     const prompt = [
-      `Generate exactly ${count} introspective and professional personality test statements in Marathi using Devanagari script.`,
-      `- Generate fluent and professional Marathi personality test statements in Devanagari script. Each statement should be introspective, easy to understand, and reflect a clear psychological trait such as emotional intelligence, adaptability, decision-making, learning from mistakes, or personal values. Avoid literal translation from English. Use natural, grammatically correct Marathi that feels native and psychometrically appropriate. `,
+      `Generate exactly ${count} introspective and professional personality test statements using a mix of formal, grammatically correct Marathi and English technical terms in Roman script.`,
+      `- Use proper, formal Marathi for the general language of the statements.`,
+      `- Keep all psychological, theoretical, and management-related terms (e.g., "Emotional Intelligence", "Decision-making", "Adaptability", "Leadership") in English script (Roman script / A-Z) exactly as they are.`,
+      `- Do NOT transliterate these terms into Marathi script; keep them in English script.`,
+      `- Each statement should be introspective, easy to understand, and reflect a clear psychological trait. Use natural, grammatically correct Marathi that feels native and psychometrically appropriate. `,
 
       // `- Language & Tone:`,
       // `- Use fluent, natural, and grammatically correct Marathi.`,
@@ -42,7 +45,7 @@ export default async function handler(req, res) {
       '  - Emotional intelligence',
       '  - Creativity and problem-solving',
       '  - Values and beliefs',
-      
+
       'CRITICAL INSTRUCTIONS:',
       '1. Return ONLY a valid JSON array of question objects, nothing else',
       '2. Do not include any markdown formatting (no ```json or```)',
@@ -72,13 +75,14 @@ export default async function handler(req, res) {
     const systemPrompt = [
       'You are a precise JSON generator for personality test questions.',
       '- Your response must be a valid JSON array of question objects.',
+      '- LINGUISTIC RULE: Keep all technical/theoretical terms (e.g., "Emotional Intelligence", "Decision-making", "Adaptability") in English script (Roman) exactly. Do NOT transliterate into Marathi script.',
       '- Do not include any markdown formatting or additional text.',
       '- Ensure all brackets are properly closed and all strings are properly escaped.',
       '- The response must be parseable by JSON.parse().'
     ].join(' ');
 
     const response = await openai.chat.completions.create({
-      model: "gpt-4",
+      model: "gpt-4o-mini",
       temperature: 0.7,
       messages: [
         {
@@ -96,7 +100,7 @@ export default async function handler(req, res) {
     // Get the raw content from the response
     const content = response.choices[0]?.message?.content?.trim() || '';
     console.log('Raw AI response received, length:', content.length);
-    
+
     if (!content) {
       throw new Error('Empty response from AI service');
     }
@@ -113,18 +117,18 @@ export default async function handler(req, res) {
 
     // First try parsing directly
     let result = safeJsonParse(content);
-    
+
     // If direct parse fails, try cleaning up the response
     if (!result.success) {
       console.log('Initial parse failed, attempting cleanup...');
-      
+
       // Try to extract JSON from markdown code blocks
       const codeBlockMatch = content.match(/```(?:json)?\n([\s\S]*?)\n```/);
       if (codeBlockMatch) {
         console.log('Found code block, extracting...');
         result = safeJsonParse(codeBlockMatch[1]);
       }
-      
+
       // If still failing, try to extract JSON array/object
       if (!result?.success) {
         console.log('Trying to extract JSON from text...');
@@ -133,7 +137,7 @@ export default async function handler(req, res) {
           result = safeJsonParse(jsonMatch[0]);
         }
       }
-      
+
       // If we have a position, try to fix common issues
       if (!result?.success) {
         console.log('Attempting to fix JSON...');
@@ -146,28 +150,28 @@ export default async function handler(req, res) {
           fixed = fixed.replace(/([^\\])"(\s*:)/g, '$1\\"$2');
           // Fix missing quotes around property names
           fixed = fixed.replace(/([{\s,])(\w+)\s*:/g, '$1"$2":');
-          
+
           result = safeJsonParse(fixed);
         } catch (e) {
           console.error('Error during JSON fix attempt:', e);
         }
       }
     }
-    
+
     let questions = [];
-    
+
     if (!result.success) {
       console.error('Failed to parse JSON after all attempts');
       console.error('Error position:', result.position);
-      console.error('Content around error:', 
+      console.error('Content around error:',
         content.substring(
-          Math.max(0, (parseInt(result.position) || 0) - 50), 
+          Math.max(0, (parseInt(result.position) || 0) - 50),
           Math.min(content.length, (parseInt(result.position) || 0) + 50)
         )
       );
       throw new Error('Failed to parse AI response as valid JSON');
     }
-    
+
     // Handle different possible response formats
     if (Array.isArray(result.data)) {
       console.log('Parsed as array of questions');
@@ -182,7 +186,7 @@ export default async function handler(req, res) {
       console.error('Unexpected response format from AI:', result.data);
       throw new Error('Unexpected response format from AI');
     }
-    
+
     // Ensure we have exactly the requested number of questions
     if (questions.length > count) {
       questions = questions.slice(0, count);
@@ -197,12 +201,12 @@ export default async function handler(req, res) {
         if (!q.text || typeof q.text !== 'string') {
           throw new Error(`Question at index ${index} is missing valid text`);
         }
-        
+
         // Ensure options exist and is an array
         if (!Array.isArray(q.options) || q.options.length !== 5) {
           throw new Error(`Question "${q.text}" must have exactly 5 options`);
         }
-        
+
         // Validate each option
         const validatedOptions = q.options.map((opt, optIndex) => {
           if (typeof opt !== 'object' || !opt || !('value' in opt) || !('text' in opt)) {
@@ -213,7 +217,7 @@ export default async function handler(req, res) {
             text: String(opt.text || '')
           };
         });
-        
+
         return {
           id: index + 1,
           text: q.text.trim(),
@@ -224,7 +228,7 @@ export default async function handler(req, res) {
         throw error; // Re-throw to be caught by the outer try-catch
       }
     });
-    
+
     return res.status(200).json(validatedQuestions);
   } catch (error) {
     console.error('Error generating personality test questions:', error);

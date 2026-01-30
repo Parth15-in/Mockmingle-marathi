@@ -2,6 +2,7 @@
 import "@/styles/globals.css";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import Head from "next/head";
 import AdminNav from "@/components/adminNav";
 
 
@@ -36,6 +37,9 @@ export default function App({ Component, pageProps }) {
 
   return (
     <>
+      <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      </Head>
       {isAdminRoute ? (
         <div className="flex min-h-screen bg-cover" style={{ backgroundImage: "url('/bg.jpg')" }}>
           <AdminNav />
@@ -43,9 +47,9 @@ export default function App({ Component, pageProps }) {
         </div>
       ) : (
         <>
-        
-      
-      
+
+
+
           <Component {...pageProps} user={user} Logout={logout} />
         </>
       )}

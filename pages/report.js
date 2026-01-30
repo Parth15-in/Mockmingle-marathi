@@ -272,6 +272,7 @@
 import React, { useState, useEffect } from 'react';
 import { IoIosArrowBack } from "react-icons/io";
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 function Report() {
   const router = useRouter();
@@ -279,14 +280,14 @@ function Report() {
   const [reportData, setReportData] = useState(null);
   const [user, setUser] = useState('');
   const [email, setEmail] = useState('');
-  
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-const [roleId, setRoleId] = useState(null);
+  const [roleId, setRoleId] = useState(null);
   const [isEmailFetched, setIsEmailFetched] = useState(false);
-   const [recordId, setRecordId] = useState(null);
-   const [role, setRole] = useState('');       // optional (English)
-   const [subject, setSubject] = useState('');   // optional (Marathi)
+  const [recordId, setRecordId] = useState(null);
+  const [role, setRole] = useState('');       // optional (English)
+  const [subject, setSubject] = useState('');   // optional (Marathi)
 
   useEffect(() => {
     if (!localStorage.getItem("token")) {
@@ -303,7 +304,7 @@ const [roleId, setRoleId] = useState(null);
   const extractScoreAndFeedback = (reportAnalysis, category) => {
     if (!reportAnalysis) {
       console.log("reportAnalysis is null");
-      
+
     }
 
     // Match scores like "Category: 25/50" or "Category: (25/50)"
@@ -312,36 +313,36 @@ const [roleId, setRoleId] = useState(null);
     const scoreStarOverallRegex = new RegExp(`${category}:\\*\\*\\s*(\\d+/50)`, 'i');
     const scoreStarOverallwithoutRegex = new RegExp(`^(\\d+)\\/50$`, 'i');
 
-    
+
 
     const scoreMatch = reportAnalysis.match(scoreoverallRegex)
       || reportAnalysis.match(regexWithoverallParentheses)
       || reportAnalysis.match(scoreStarOverallRegex)
       || reportAnalysis.match(scoreStarOverallwithoutRegex);
-console.log("match Score",scoreMatch);
+    console.log("match Score", scoreMatch);
 
     // If a match is found, extract the score
     const overallScore = scoreMatch ? parseInt(scoreMatch[1].split('/')[0], 10) : 0; // Extract the number before /50
 
     // const overallScore = scoreMatch && scoreMatch[1] ? parseInt(scoreMatch[1], 10) : 0;
-    return { overallScore }; 
+    return { overallScore };
   };
 
   // Store the score function - Make sure this is declared before it's called
-  const storeScore = async (role,subject, email, overallScore) => {
+  const storeScore = async (role, subject, email, overallScore) => {
     try {
       const collageName = user?.collageName || "Unknown Collage";
-  
+
       // Log the data before sending it
       const requestData = {
         role,
         subject,
         email,
         collageName,
-         overallScore,
+        overallScore,
       };
       console.log('Sending request data:', requestData);  // This will help debug
-  
+
       const response = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/overallScore`, {
         method: 'POST',
         headers: {
@@ -349,18 +350,18 @@ console.log("match Score",scoreMatch);
         },
         body: JSON.stringify(requestData),
       });
-  
+
       if (!response.ok) {
         throw new Error('Failed to store report');
       }
-  
+
       const result = await response.json();
       console.log('Score stored successfully:', result);
     } catch (error) {
       console.error('Error storing score:', error.message);
     }
   };
-  
+
 
   // Fetch job role data if jobRoleId exists
   useEffect(() => {
@@ -397,7 +398,7 @@ console.log("match Score",scoreMatch);
 
     const fetchJobRole = async () => {
       try {
-   
+
         const response = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/getReadyQuestionsAndAnswers?roleId=${recordId}`);
         localStorage.setItem('status', "processing");
         if (!response.ok) {
@@ -427,16 +428,16 @@ console.log("match Score",scoreMatch);
         console.log("Model returned this report", analysisData);
 
         // Extract overallScore from report data using the extractScoreAndFeedback function
-        const { overallScore } = extractScoreAndFeedback(analysisData, "Overall Score"||"Overall");
+        const { overallScore } = extractScoreAndFeedback(analysisData, "Overall Score" || "Overall");
 
         console.log("Extracted overall score:", overallScore);
         // Store the extracted overall score
-        await storeScore(data.data.role || null,data.data.subject || null, data.data.email, overallScore);
+        await storeScore(data.data.role || null, data.data.subject || null, data.data.email, overallScore);
         // Store the report analysis
-        await storeReport(data.data.role || null,data.data.subject || null, data.data.email, analysisData);
+        await storeReport(data.data.role || null, data.data.subject || null, data.data.email, analysisData);
 
         setEmail(data.data.email);
-        setRole(data.data.role ||"");
+        setRole(data.data.role || "");
 
         localStorage.removeItem('status');
         localStorage.setItem('status', "model 5 min");
@@ -451,11 +452,11 @@ console.log("match Score",scoreMatch);
     fetchJobRole();
   }, [recordId]);
 
-  const storeReport = async (role,subject, email, reportAnalysis) => {
+  const storeReport = async (role, subject, email, reportAnalysis) => {
     // Ensure collageName has a default value if it's undefined
     const collageName = user?.collageName || 'Unknown College';
-    
-    console.log("Storing report for:", { role,subject,email, reportAnalysis});
+
+    console.log("Storing report for:", { role, subject, email, reportAnalysis });
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/saveAndGetReport`, {
         method: 'POST',
@@ -463,14 +464,14 @@ console.log("match Score",scoreMatch);
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-        role,
-        subject,
+          role,
+          subject,
           email,
           collageName,
           reportAnalysis,
         }),
       });
-       
+
       if (!response.ok) {
         throw new Error('Failed to store report');
       }
@@ -484,18 +485,18 @@ console.log("match Score",scoreMatch);
   };
 
   if (error) {
-    return console.log("other error",error);
+    return console.log("other error", error);
   }
   const goBack = () => {
-        router.push('/'); // This will take the user to the previous page
-      };
-    
+    router.push('/'); // This will take the user to the previous page
+  };
+
   return (
     <div className="min-h-screen bg-cover bg-center relative" style={{ backgroundImage: "url('/BG.jpg')" }}>
       {/* Back Button */}
       <div className="absolute top-5 left-3 text-5xl text-white cursor-pointer flex items-center" onClick={goBack}>
-  <IoIosArrowBack /> <span className="ml-2 text-base">मागे जा</span>
-</div>
+        <IoIosArrowBack /> <span className="ml-2 text-base">मागे जा</span>
+      </div>
 
 
       {/* Main Content */}
@@ -508,38 +509,88 @@ console.log("match Score",scoreMatch);
           अहवाल ५ मिनिटांनी अपडेट होईल.
         </h2>
 
-        {/* YouTube iframes */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 mb-6">
-          <div className="flex justify-center">
+        <div className="flex justify-center mb-10">
+          <Link href={`/suggestion?subject=${encodeURIComponent(report.subject || report.role || '')}`}>
+            <button className="bg-gradient-to-r from-red-500 to-pink-600 text-white py-3 px-8 rounded-full text-lg font-semibold hover:from-red-600 hover:to-pink-700 transition duration-300 shadow-lg hover:shadow-xl flex items-center gap-2 group">
+              🎥 व्हिडिओ सूचना पहा
+            </button>
+          </Link>
+        </div>
+
+        {/* Personalized YouTube Video Suggestions */}
+        <VideoSuggestions userEmail={email} />
+
+        {/* Personalized Book Suggestions */}
+        <BookSuggestions userEmail={email} />
+      </div>
+    </div>
+  );
+}
+
+// --- VideoSuggestions Component ---
+function VideoSuggestions({ userEmail }) {
+  const [videos, setVideos] = useState([]);
+  useEffect(() => {
+    if (!userEmail) return;
+    fetch(`/api/youtube`, { headers: { 'user-email': userEmail } })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && data.data.length > 0) {
+          // Flatten all video recommendations
+          const allVideos = data.data.flatMap(rec => rec.recommendations.flatMap(r => r.videos));
+          setVideos(allVideos);
+        }
+      });
+  }, [userEmail]);
+  if (!videos.length) return null;
+  return (
+    <div className="mb-6">
+      <h3 className="text-xl font-semibold mb-2 text-red-400">Video Suggestions</h3>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
+        {videos.map((video, idx) => (
+          <div className="flex justify-center flex-col items-center bg-gray-800 p-4 rounded-xl" key={idx}>
             <iframe
-              src="https://www.youtube.com/embed/SEO9YPzSH-0"
+              src={video.url.replace('watch?v=', 'embed/')}
               frameBorder="0"
               allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
+              title={video.title || `Video ${idx + 1}`}
               className="w-full max-w-[560px] h-[315px] rounded-lg shadow-lg"
             />
+            <p className="mt-2 text-sm text-gray-300">{video.title}</p>
           </div>
-          <div className="flex justify-center">
-            <iframe
-              src="https://www.youtube.com/embed/AH7k3P6W7V8"
-              frameBorder="0"
-              allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              className="w-full max-w-[560px] h-[315px] rounded-lg shadow-lg"
-            />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// --- BookSuggestions Component ---
+function BookSuggestions({ userEmail }) {
+  const [books, setBooks] = useState([]);
+  useEffect(() => {
+    if (!userEmail) return;
+    fetch(`/api/book`, { headers: { 'user-email': userEmail } })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && data.data.length > 0) {
+          // Flatten all book recommendations
+          const allBooks = data.data.flatMap(rec => rec.recommendations.flatMap(r => r.books));
+          setBooks(allBooks);
+        }
+      });
+  }, [userEmail]);
+  if (!books.length) return null;
+  return (
+    <div className="flex flex-col items-center mt-6">
+      <h3 className="text-xl font-semibold mb-2 text-indigo-400">Book Suggestions</h3>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 w-full">
+        {books.map((book, idx) => (
+          <div className="flex flex-col items-center bg-white bg-opacity-10 p-4 rounded-lg shadow-lg" key={idx}>
+            <div className="font-semibold text-blue-100 mb-2">{book.title}</div>
+            <a href={book.url} target="_blank" rel="noopener noreferrer" className="text-blue-300 underline">Read Book</a>
           </div>
-        </div>
-
-        {/* Book Creator iframe */}
-        <div className="flex justify-center">
-          <iframe
-            src="https://read.bookcreator.com/aWAhdfUWXPQR1UPW7fJOHnfObsb2/_or2hLPmR3WlS34sPH_WKQ"
-            height="550"
-            className="w-full max-w-4xl rounded-lg shadow-lg"
-            allow="clipboard-write self https://read.bookcreator.com"
-          ></iframe>
-
-        </div>
+        ))}
       </div>
     </div>
   );

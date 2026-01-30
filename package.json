@@ -59,7 +59,12 @@
     "tw-elements": "^2.0.0",
     "twilio": "^5.4.0",
     "uuid": "^11.1.0",
-    "yarn": "^1.22.22"
+    "yarn": "^1.22.22",
+    "jsonwebtoken": "^9.0.2"
+  },
+  "overrides": {
+    "jwa": "^2.0.0",
+    "jws": "^4.0.0"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.20",

@@ -45,7 +45,7 @@ export default async function handler(req, res) {
     try {
       // Fetch reports for the specific email, sorted by newest first
       const reports = await AssessmentReport.find({ email: email }).sort({ createdAt: -1 });
-      
+
       return res.status(200).json({ reports });
     } catch (err) {
       console.error("Fetch Error:", err);
@@ -67,53 +67,109 @@ export default async function handler(req, res) {
     try {
       // --- SCENARIO 1: GENERATE MCQ QUESTIONS ---
       if (type === 'generate_questions') {
-        
-        // Strict system prompt to ensure JSON format
-        const systemPrompt = `You are a strict academic examiner for the Maharashtra State Board. 
-        You must output strictly valid JSON only. Do not add any markdown formatting (like \`\`\`json).`;
-        
-        // User prompt specifically asking for 25 MCQs in Marathi
-        const userPrompt = `Create exactly 25 Multiple Choice Questions (MCQs) in Marathi for Class ${standard}, Subject ${subject}. 
-        
-        The output must be a raw JSON array of objects. Each object must follow this structure:
-        {
-          "id": 1,
-          "question": "Question text in Marathi",
-          "options": ["Option A", "Option B", "Option C", "Option D"],
-          "correctAnswer": "The full text of the correct option"
-        }
 
-        Ensure the questions cover the core concepts of the subject.`;
+        // Strict system prompt to ensure JSON format and linguistic rules
+        const systemPrompt = `You are a senior technical examiner and industrial specialist.
+        Your goal is to generate high-depth, practical, and UNIQUE Multiple Choice Questions (MCQs).
+        
+        LINGUISTIC AND GRAMMAR RULES:
+        1. Use proper, formal, and grammatically correct Marathi for the general language structure.
+        2. VERY IMPORTANT: Keep all technical, theoretical, and management-related terms (e.g., "Circuit", "PCB", "SOP", "SMT", "Quality Control", "Standard Operating Procedure", "Gerber", "DRC", "LOTO", "FIFO", "Prepreg", "Insulator", "Soldering") in English script (Roman/A-Z) exactly as they are. 
+        3. Do NOT transliterate these terms into Marathi script.
+        4. Technical terms MUST remain in English script even if they appear in Marathi sentences.
+        5. IMPORTANT: All OPTIONS (MCQ choices) must be in English script (Roman/A-Z) to ensure technical accuracy and standard industrial vocabulary. The goal is for the student to understand the technical meaning in English.
+        
+        You must output strictly valid JSON only. Do not add any markdown formatting.`;
+
+        // User prompt specifically asking for 25 MCQs with technical depth and variety
+        const userPrompt = `Create exactly 25 UNIQUE and high-depth MCQ questions for Class ${standard}, Subject ${subject}.
+        
+        STRICT VARIETY RULES:
+        - Questions must cover diverse technical areas: Design, Fabrication, Assembly, Testing, Maintenance, and Quality.
+        - Avoid repeating the same theme. If the subject is PCB, ask about Gerber files, soldering defects, board stack-up, AOI testing, etc.
+        - Each of the 25 questions MUST be different in context.
+        - CRITICAL: All technical meanings and options MUST be in English script. For example, if asking "What is Prepreg?", the options should be "Pre-filled fiber", "Type of insulator", etc., in English.
+
+        TECHNICAL CONTEXT (If applicable):
+        - PCB: Gerber files, DRC (Design Rule Check), Schematics, Layout, Multilayer stack-up, Etching, Prepreg, Soldermask, SMT vs Through-hole, Pick-and-place, Reflow/Wave soldering, Bridging, Cold joints, AOI, X-Ray, ICT.
+        - AAO: Torque management, SOP, Assembly sequence, Pneumatic tools, Jigs/Fixtures, Poka-yoke, Reject handling, PPE, LOTO, 5S, FIFO, Cycle time.
+        
+        FORMATTING RULES:
+        - Output MUST be a valid JSON object with a key "questions" containing the array of 25 questions.
+        - Use Marathi numerals (१, २, ३...) only for indices or identifiers if necessary, but keep JSON keys in English.
+        - JSON Structure:
+        {
+          "questions": [
+            {
+              "id": 1,
+              "question": "Question text in Marathi with technical terms in Roman script",
+              "options": ["Option 1", "Option 2", "Option 3", "Option 4"],
+              "correctAnswer": "Correct Option Text"
+            }
+          ]
+        }`;
 
         const response = await fetch(url, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
           body: JSON.stringify({
-            model: "gpt-3.5-turbo-16k", // Using 16k model to ensure enough tokens for 25 questions
+            model: "gpt-4o-mini",
             messages: [{ role: "system", content: systemPrompt }, { role: "user", content: userPrompt }],
-            temperature: 0.7
+            temperature: 0.4, // Lower temperature for more focused and technical output
+            max_tokens: 2500, // Ensure enough tokens for 25 detailed questions
+            response_format: { type: "json_object" } // Force JSON response if supported
           })
         });
 
         const data = await response.json();
-        
+
         if (data.error) {
-            console.error("OpenAI Error:", data.error);
-            return res.status(500).json({ error: data.error.message });
+          console.error("OpenAI Error:", data.error);
+          return res.status(500).json({ error: data.error.message });
         }
 
-        const aiContent = data.choices[0].message.content;
+        let aiContent = data.choices[0].message.content;
+
+        // Ensure we handle the "json_object" format if it wraps the array in an object
+        if (aiContent.trim().startsWith('{')) {
+          try {
+            const tempObj = JSON.parse(aiContent);
+            // If the AI put questions in a key like "questions" or "result"
+            const possibleQuestions = tempObj.questions || tempObj.result || tempObj;
+            if (Array.isArray(possibleQuestions)) {
+              return res.status(200).json({ result: possibleQuestions });
+            } else if (typeof possibleQuestions === 'object' && Object.values(possibleQuestions).some(v => Array.isArray(v))) {
+              // Find the first array in the object
+              const arrayKey = Object.keys(possibleQuestions).find(k => Array.isArray(possibleQuestions[k]));
+              return res.status(200).json({ result: possibleQuestions[arrayKey] });
+            }
+          } catch (e) {
+            console.warn("Wrapped JSON parse failed, falling back to regex", e);
+          }
+        }
 
         try {
-          // Attempt to parse JSON directly
+          // Helper to clean common AI JSON mistakes
+          const cleanJson = (str) => {
+            return str
+              .replace(/\]\s*"/g, '], "')     // Missing comma after array
+              .replace(/\}\s*\{/g, '}, {')    // Missing comma between objects
+              .replace(/"\s*"/g, '", "')      // Missing comma after string value
+              .replace(/,\s*\]/g, ']')        // Trailing comma in array
+              .replace(/,\s*\}/g, '}');       // Trailing comma in object
+          };
+
           let parsedQuestions = [];
-          
-          // Helper to find JSON array if AI adds extra text
-          const jsonMatch = aiContent.match(/\[.*\]/s);
-          if (jsonMatch) {
-            parsedQuestions = JSON.parse(jsonMatch[0]);
-          } else {
-             parsedQuestions = JSON.parse(aiContent);
+
+          // Attempt to find JSON array
+          const jsonMatch = aiContent.match(/\[[\s\S]*\]/);
+          const rawToParse = jsonMatch ? jsonMatch[0] : aiContent;
+
+          try {
+            parsedQuestions = JSON.parse(rawToParse);
+          } catch (firstPassError) {
+            console.warn("First pass JSON parse failed, attempting cleanup...");
+            parsedQuestions = JSON.parse(cleanJson(rawToParse));
           }
 
           return res.status(200).json({ result: parsedQuestions });
@@ -122,32 +178,26 @@ export default async function handler(req, res) {
           console.error("AI Output:", aiContent);
           return res.status(500).json({ error: "Failed to parse questions. Please try again." });
         }
-      } 
+      }
 
       // --- SCENARIO 2: EVALUATE & SAVE ---
       else if (type === 'evaluate_answers') {
-        
-        // 1. STRICT VALIDATION
+
         if (!email) {
           return res.status(400).json({ error: "User is not logged in. Cannot save report." });
         }
 
-        // 2. CALCULATE SCORE LOCALLY (More reliable than AI for MCQs)
-        // We assume 'questions' array contains the 'correctAnswer' field from the previous step
         let calculatedScore = 0;
         const totalQuestions = questions.length;
 
         questions.forEach((q, index) => {
-            // Compare user answer with correct answer
-            // Note: Ensure frontend sends the actual text string or index consistently
-            if (userAnswers[index] && userAnswers[index] === q.correctAnswer) {
-                calculatedScore++;
-            }
+          if (userAnswers[index] && userAnswers[index] === q.correctAnswer) {
+            calculatedScore++;
+          }
         });
 
-        // 3. AI QUALITATIVE FEEDBACK
         const systemPrompt = `You are a helpful teacher speaking Marathi. Analyze the student's performance.`;
-        
+
         const userPrompt = `The student answered ${calculatedScore} out of ${totalQuestions} questions correctly in Subject: ${subject}.
         
         Provide a Markdown report in Marathi containing:
@@ -161,7 +211,7 @@ export default async function handler(req, res) {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
           body: JSON.stringify({
-            model: "gpt-3.5-turbo",
+            model: "gpt-4o-mini",
             messages: [{ role: "system", content: systemPrompt }, { role: "user", content: userPrompt }],
             temperature: 0.7
           })
@@ -169,18 +219,17 @@ export default async function handler(req, res) {
 
         const data = await response.json();
         if (data.error) throw new Error(data.error.message);
-        
+
         const aiAnalysis = data.choices[0].message.content;
 
-        // 4. SAVE TO DATABASE
         try {
           const newReport = new AssessmentReport({
             role: role || 'Student',
             subject: subject,
             email: email,
             collageName: collageName || 'Unknown College',
-            reportAnalysis: aiAnalysis, // The qualitative feedback
-            score: calculatedScore,     // The numeric score
+            reportAnalysis: aiAnalysis,
+            score: calculatedScore,
             totalQuestions: totalQuestions
           });
 
@@ -191,10 +240,10 @@ export default async function handler(req, res) {
           return res.status(500).json({ error: "Failed to save report to database", details: dbError.message });
         }
 
-        return res.status(200).json({ 
-            result: aiAnalysis, 
-            score: calculatedScore, 
-            total: totalQuestions 
+        return res.status(200).json({
+          result: aiAnalysis,
+          score: calculatedScore,
+          total: totalQuestions
         });
       }
 
@@ -202,9 +251,8 @@ export default async function handler(req, res) {
       console.error("API Handler Error:", error);
       return res.status(500).json({ error: error.message || "Internal Server Error" });
     }
-  } 
-  
-  // Handle other methods
+  }
+
   else {
     return res.status(405).json({ message: 'Method not allowed' });
   }

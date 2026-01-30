@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import Head from 'next/head';
+import Link from 'next/link';
 import { IoClose } from "react-icons/io5";
 import { jsPDF } from "jspdf";
 
@@ -579,7 +580,7 @@ function Oldreport() {
               </button>
             </div>
 
-            
+
             <div className="p-8">
               <div className="mb-6 p-4 bg-white rounded-lg shadow-md">
                 <h3 className="text-xl font-bold text-indigo-800 mb-4">तपशीलवार विश्लेषण</h3>
@@ -597,7 +598,7 @@ function Oldreport() {
                         );
                       }
 
-                      
+
                       if (line.trim().startsWith('|')) {
                         const cells = line.split('|').map(c => c.trim()).filter(c => c);
                         if (cells.length === 2) {
@@ -607,10 +608,10 @@ function Oldreport() {
                             </p>
                           );
                         }
-                        return null; 
+                        return null;
                       }
 
-                      
+
                       if (line.match(/\*\*[^*]+\*\*/)) {
                         const headerText = line.replace(/\*\*/g, '');
                         return (
@@ -632,7 +633,7 @@ function Oldreport() {
                         return <li key={index} className="ml-8 mb-1 list-decimal">{numberText}</li>;
                       }
 
-                      
+
                       if (line.match(/(\d+\/(10|50))/)) {
                         return <p key={index} className="font-semibold text-indigo-700 mb-2">{line}</p>;
                       }
@@ -770,7 +771,7 @@ function Oldreport() {
                             const maxScore = isOverallScore ? 50 : 10;
                             // Ensure score is within valid range (0-10 for individual, 0-50 for overall)
                             let safeScore = Math.min(Math.max(0, score || 0), maxScore);
-                            
+
                             // If we still have a score of 1, which might be a default, try one more time
                             if (safeScore === 1 && !isOverallScore) {
                               // Look for the score in the report text directly
@@ -783,13 +784,13 @@ function Oldreport() {
                                 }
                               }
                             }
-                            
+
                             // Format the score text (e.g., "7/10" or "35/50")
-                            const scoreText = isOverallScore ? 
+                            const scoreText = isOverallScore ?
                               `${safeScore}/50` : `${safeScore}/10`;
-                              
+
                             // Scale for display (0-10 for all scores in the UI)
-                            const displayScore = isOverallScore ? 
+                            const displayScore = isOverallScore ?
                               (safeScore / 5) : // Scale 0-50 to 0-10
                               safeScore; // Already 0-10
 
@@ -803,18 +804,18 @@ function Oldreport() {
                                   {/* Enhanced Circular Progress Bar */}
                                   <div className="w-28 h-28 mb-4 sm:mb-0 relative group">
                                     <div className="absolute inset-0 bg-blue-500/20 rounded-full blur-md group-hover:blur-lg transition-all duration-300 -z-10"></div>
-                                                                        <CircularProgressbar
+                                    <CircularProgressbar
                                       value={displayScore}
                                       maxValue={10}
                                       text={isOverallScore ? `${safeScore}/50` : scoreText}
                                       background
                                       backgroundPadding={6}
                                       styles={buildStyles({
-                                        pathColor: isOverallScore 
+                                        pathColor: isOverallScore
                                           ? 'url(#overallGradient)'
-                                          : displayScore >= 7 
+                                          : displayScore >= 7
                                             ? '#4ade80' // Good score (7-10)
-                                            : displayScore >= 4 
+                                            : displayScore >= 4
                                               ? '#facc15' // Average score (4-6.9)
                                               : '#f87171', // Poor score (0-3.9)
                                         backgroundColor: '#1f2937',
@@ -846,7 +847,7 @@ function Oldreport() {
                                       <div
                                         className="bg-gradient-to-r from-blue-400 to-purple-500 h-3 rounded-full transition-all duration-1000 ease-out"
                                         style={{
-                                          width: `${(displayScore / (isOverallScore?10:10)) * 100}%`,
+                                          width: `${(displayScore / (isOverallScore ? 10 : 10)) * 100}%`,
                                           boxShadow: '0 0 8px rgba(147, 51, 234, 0.5)'
                                         }}
                                       ></div>

@@ -8,7 +8,7 @@ import 'react-circular-progressbar/dist/styles.css';
 import { jsPDF } from "jspdf";
 
 function ReportDetailPopup({ user, isOpen, setIsOpen }) {
-  if (!isOpen ) return null;
+  if (!isOpen) return null;
   const router = useRouter();
 
   const [email, setEmail] = useState('');
@@ -52,7 +52,7 @@ function ReportDetailPopup({ user, isOpen, setIsOpen }) {
 
     return 0; // Return 0 if no score is found
   };
-  
+
   const extractScoreAndFeedback = (report, category) => {
     // console.log(report);
 
@@ -72,15 +72,15 @@ function ReportDetailPopup({ user, isOpen, setIsOpen }) {
     const feedbackRegex = new RegExp(`${category}:\\s*(\\d+/10)\\s*([^]*?)(?=\n[A-Z][a-zA-Z ]+:|Overall|$)`, 'i');
     const feedbackRegexParentheses = new RegExp(`${category}:\\s*\\((\\d+/10)\\)\\s*([^]*?)(?=\n[A-Z][a-zA-Z ]+:|Overall Report|$)`, 'i');
     const feedbackRegexStarParentheses = new RegExp(`${category}:\\*\\*\\s*(\\d+/10)\\s*([^]*?)(?=\n[A-Z][a-zA-Z ]+:|Overall Report|$)`, 'i');
-    
+
     const feedbackOverallRegex = new RegExp(`${category}:\\s*(\\d+/50)\\s*([^]*?)(?=\n[A-Z][a-zA-Z ]+:|Overall|$)`, 'i');
     const feedbackRegexOverallParentheses = new RegExp(`${category}:\\s*\\((\\d+/50)\\)\\s*([^]*?)(?=\n[A-Z][a-zA-Z ]+:|Overall Report|$)`, 'i');
     const feedbackRegexStarOverallParentheses = new RegExp(`${category}:\\*\\*\\s*(\\d+/50)\\s*([^]*?)(?=\n[A-Z][a-zA-Z ]+:|Overall Report|$)`, 'i');
 
 
 
-    const scoreMatch = report.reportAnalysis.match(scoreRegex) || report.reportAnalysis.match(regexWithParentheses) || report.reportAnalysis.match(scoreoverallRegex) || report.reportAnalysis.match(regexWithoverallParentheses)||report.reportAnalysis.match(scoreStarRegex)||report.reportAnalysis.match(scoreStarOverallRegex)
-    const feedbackMatch = report.reportAnalysis.match(feedbackRegex) || report.reportAnalysis.match(feedbackRegexParentheses) ||report.reportAnalysis.match(feedbackOverallRegex) || report.reportAnalysis.match(feedbackRegexOverallParentheses)||report.reportAnalysis.match(feedbackRegexStarParentheses)||report.reportAnalysis.match(feedbackRegexStarOverallParentheses)
+    const scoreMatch = report.reportAnalysis.match(scoreRegex) || report.reportAnalysis.match(regexWithParentheses) || report.reportAnalysis.match(scoreoverallRegex) || report.reportAnalysis.match(regexWithoverallParentheses) || report.reportAnalysis.match(scoreStarRegex) || report.reportAnalysis.match(scoreStarOverallRegex)
+    const feedbackMatch = report.reportAnalysis.match(feedbackRegex) || report.reportAnalysis.match(feedbackRegexParentheses) || report.reportAnalysis.match(feedbackOverallRegex) || report.reportAnalysis.match(feedbackRegexOverallParentheses) || report.reportAnalysis.match(feedbackRegexStarParentheses) || report.reportAnalysis.match(feedbackRegexStarOverallParentheses)
     // console.log(feedbackMatch);
     const score = scoreMatch ? parseInt(scoreMatch[1], 10) : 0;
     const feedback = feedbackMatch ? feedbackMatch[0] : 'No feedback available.';
@@ -277,7 +277,7 @@ function ReportDetailPopup({ user, isOpen, setIsOpen }) {
     const isOverallScore = label === 'Overall Score';
     const maxScore = isOverallScore ? 50 : 10;  // Set max score to 50 for Overall Score, else 10
     const scoreText = isOverallScore ? `${score}/50` : `${score}/10`; // Display score accordingly
-    
+
     return (
       <div className="card-container text-black">
         <div className="card relative w-full h-full">
@@ -300,23 +300,23 @@ function ReportDetailPopup({ user, isOpen, setIsOpen }) {
               </div>
             </div>
           </div>
-  
+
           {/* Back Side */}
           <div className="back flex flex-col justify-center items-center p-4 bg-[#b393f8] rounded-lg overflow-y-auto">
             <h5 className="text-xl font-semibold">{label} - तपशील</h5>
             <p className="mt-4 text-sm">
               {feedback.split(" ").slice(0, 32).join(" ")}...
             </p>
-  
+
             <p className="mt-4 text-sm">अधिक जाणून घ्या</p>
           </div>
         </div>
       </div>
     );
   };
-  
 
-return (
+
+  return (
     <div
       className="modal-background text-white"
       onClick={handleClosee} // Close modal if clicked outside
@@ -331,7 +331,7 @@ return (
           </div>
           <h1 className="text-center">मुलाखत अहवाल</h1>
         </div>
-        
+
         <div className="mx-auto mt-5">
           {visibility.previousReports && (
             <div className="mx-auto">
@@ -367,12 +367,21 @@ return (
                             })}
                           </div>
 
-                          <button
-                            className="button mt-4"
-                            onClick={() => downloadReport(report.reportAnalysis, report)}
-                          >
-                            रिपोर्ट डाउनलोड करा
-                          </button>
+                          <div className="flex flex-wrap gap-4 mt-6">
+                            <button
+                              className="bg-purple-600 text-white font-bold py-2 px-6 rounded-lg shadow-md hover:bg-purple-700 transition-all flex items-center gap-2"
+                              onClick={() => downloadReport(report.reportAnalysis, report)}
+                            >
+                              रिपोर्ट डाउनलोड करा
+                            </button>
+
+                            <button
+                              className="bg-red-600 text-white font-bold py-2 px-6 rounded-lg shadow-md hover:bg-red-700 transition-all flex items-center gap-2"
+                              onClick={() => router.push(`/suggestion?subject=${encodeURIComponent(report.subject || report.role || '')}`)}
+                            >
+                              🎥 व्हिडिओ सूचना
+                            </button>
+                          </div>
                         </div>
                       </div>
                     )}

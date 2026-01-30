@@ -510,7 +510,7 @@ function Report() {
         </h2>
 
         <div className="flex justify-center mb-10">
-          <Link href={`/suggestion?subject=${encodeURIComponent(report.subject || report.role || '')}`}>
+          <Link href={`/suggestion?subject=${encodeURIComponent(subject || role || '')}`}>
             <button className="bg-gradient-to-r from-red-500 to-pink-600 text-white py-3 px-8 rounded-full text-lg font-semibold hover:from-red-600 hover:to-pink-700 transition duration-300 shadow-lg hover:shadow-xl flex items-center gap-2 group">
               🎥 व्हिडिओ सूचना पहा
             </button>
